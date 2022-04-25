@@ -21,8 +21,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Factory } from '../models/factory-model'
 import FactoryService from '../factoryService'
 import FactoryComp from './Factory.vue'
+/* eslint-disable  @typescript-eslint/no-unused-vars */
 import { BootstrapVue } from 'bootstrap-vue'
-import io from 'socket.io-client';
 
 
 
@@ -32,39 +32,45 @@ import io from 'socket.io-client';
 export default class RootView extends Vue {
     factories: Array<Factory> = []
     status: { status: string, name: string, id?: string } = { status: "", name: "", id: "" }
-    socket: any = null
-
+    
     created() {
-        this.socket = io('http://localhost:3000')
-        this.status = { 
-            status: this.$route.params.status,
-            name: this.$route.params.factoryName,
+       this.status = { 
+            status: this.$route.params.status || "",
+            name: this.$route.params.factoryName || "",
             id: this.$route.params.factoryId || ""
         }
         this.getFactories()
         if(this.status.status === "edited") {
+            this.$socket.client.emit('factoryUpdated', this.status.name)
             this.makeToast('primary', `'${this.status.name}' is updated!`)
         } else if(this.status.status === "deleted") {
+            console.log('delete trigger')
+            this.$socket.client.emit('factoryDeleted', this.status.name)
             this.makeToast('danger', `'${this.status.name}' is deleted!`)
         } else if(this.status.status === "added") {
+            this.$socket.client.emit('factoryAdded', this.status.name)
             this.makeToast('primary', `'${this.status.name}' is added!`)
         }
-        
-        this.socket.on('factoryAdded', (data: any) => {
-            this.getFactories()
-            this.makeToast('primary', `New Factory '${data.name}' is added`)
+
+        this.$socket.$subscribe('connect', () => {
+            console.log(this.$socket.client.id)
         })
-        this.socket.on('factoryUpdated', (data: any) => {
+        this.$socket.$subscribe('factoryAdded', (name: string) => {
             this.getFactories()
-            this.makeToast('primary', `Factory '${data.name}' is updated`)
-        })
-        this.socket.on('factoryDeleted', (data: any) => {
+            this.makeToast('primary', `'${name}' is added!`)
+        });
+        this.$socket.$subscribe('factoryUpdated', (name: string) => {
             this.getFactories()
-            this.makeToast('primary', `Factory '${data.name}' is Deleted`)
-        })
+            this.makeToast('primary', `'${name}' is updated!`)
+        });
+        this.$socket.$subscribe('factoryDeleted', (name: string) => {
+            console.log('delete listener')
+            this.getFactories()
+            this.makeToast('danger', `'${name}' is deleted!`)
+        });
     }
 
-    makeToast(variant = "primary", content = "") {
+    makeToast(variant = 'primary', content = '') {
         this.$bvToast.toast(content, {
             toaster: 'b-toaster-top-center',
             variant: variant,
@@ -73,6 +79,7 @@ export default class RootView extends Vue {
     }
 
     updateparent(res: {message: string, name: string}) {
+        this.$socket.client.emit('factoryDeleted', res.name)
         this.makeToast('danger', `'${res.name}' is deleted!`)
         this.getFactories()
     }
@@ -85,7 +92,6 @@ export default class RootView extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
     .node {
         cursor: pointer;

@@ -38,12 +38,6 @@ router.post('/', async (req, res) => {
     try {
         const newFactory = await factory.save()
         res.status(201).json(newFactory)
-        const io = req.app.get('io')
-        io.on('connection', socket => {
-            socket.broadcast.emit('factoryAdded', {
-                name: req.body.name
-            })
-        })
     } catch(err) {
         res.status(400).json({ message: err.message })
     }
@@ -68,12 +62,6 @@ router.patch('/:id', getFactory, async (req, res) => {
     try {
         const updatedFactory = await res.factory.save()
         res.status(200).json(updatedFactory)
-        const io = req.app.get('io')
-        io.on('connection', socket => {
-            socket.broadcast.emit('factoryUpdated', {
-                name: req.body.name
-            })
-        })
     } catch(err) {
         res.status(400).json({ message: err.message })
     }
@@ -84,12 +72,6 @@ router.delete('/:id', getFactory, async (req, res) => {
     try {
         await res.factory.remove()
         res.json({ message: 'Factory Deleted', name: res.factory.name });
-        const io = req.app.get('io')
-        io.on('connection', socket => {
-            socket.broadcast.emit('factoryDeleted', {
-                name: res.factory.name
-            })
-        })
     } catch {
         res.status(500).json({ message: err.message })
     }

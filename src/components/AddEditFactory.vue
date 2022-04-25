@@ -40,7 +40,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Factory } from '../models/factory-model'
 import FactoryService from '../factoryService'
-import VueRouter from 'vue-router'
+/* eslint-disable  @typescript-eslint/no-unused-vars */
+import VueRouter from 'vue-router' 
 
 
 @Component
@@ -176,6 +177,7 @@ export default class AddFactory extends Vue {
                     factoryId: res._id
                 } 
             })
+
         })
     }
 }

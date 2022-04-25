@@ -1,9 +1,9 @@
 require('dotenv').config()
-const path = require('path')
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const { Server } = require('socket.io')
+const http = require('http')
+const socketIO = require('socket.io')
 
 const app = express()
 
@@ -26,11 +26,26 @@ if(process.env.NODE_ENV === 'production') {
     app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'))
 }
 
-const server = app.listen(port, console.log(`Server started on port:${port}`))
+const server = http.createServer(app)
 
-const io = new Server(server, {
+server.listen(port, console.log(`Server started on port:${port}`))
+
+const io = socketIO(server, {
     cors: {
         origin: '*'
     }
+})
+io.on('connection', socket => {
+    console.log("User connected: "+socket.id)
+    socket.on('factoryAdded', name => {
+        socket.broadcast.emit('factoryAdded', name)
+    })
+    socket.on('factoryUpdated', name => {
+        socket.broadcast.emit('factoryUpdated', name)
+    })
+    socket.on('factoryDeleted', name => {
+        console.log('in delete')
+        socket.broadcast.emit('factoryDeleted', name)
+    })
 })
 app.set('io', io)

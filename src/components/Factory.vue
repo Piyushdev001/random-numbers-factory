@@ -27,6 +27,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Factory } from '../models/factory-model'
 import FactoryService from '../factoryService'
+/* eslint-disable  @typescript-eslint/no-unused-vars */
 import VueRouter from 'vue-router';
 
 @Component
