@@ -36,6 +36,7 @@ export default class FactoryComp extends Vue {
   @Prop() private index!: number;
   @Prop() private updatedId!: string;
 
+  //Edit factory
   editFactory(id: string) {
     this.$router.push(
       { 
@@ -47,6 +48,7 @@ export default class FactoryComp extends Vue {
     );
   }
 
+  //Delete factory in root level
   deleteFactory(id: string) {
     FactoryService.deleteFactory(id).then((res) => {
         this.$emit('factorydeleted', res)

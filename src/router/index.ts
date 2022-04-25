@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import RootView from '../components/RootView.vue'
-import AddEditFactory from '../components/AddEditFactory.vue'
+import EditFactory from '../components/EditFactory.vue'
+import AddFactory from '../components/AddFactory.vue'
 
 Vue.use(VueRouter)
 
@@ -14,12 +15,12 @@ const routes: Array<RouteConfig> = [
   {
     path: '/add-factory',
     name: 'Add Factory',
-    component: AddEditFactory
+    component: AddFactory
   },
   {
     path: '/edit-factory',
     name: 'Edit Factory',
-    component: AddEditFactory
+    component: EditFactory
   },
 ]
 
