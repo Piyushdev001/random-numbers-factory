@@ -10,6 +10,12 @@ npm install
 npm run serve
 ```
 
+### start local node js server
+```
+npm run dev
+```
+
+
 ### Compiles and minifies for production
 ```
 npm run build
