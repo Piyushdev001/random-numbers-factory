@@ -1,7 +1,7 @@
 <template>
 <div class="container">
     <div class="row align-items-center justify-content-center mt-5">
-        <div class="col-5">
+        <div class="col-md-5">
             <factory-form @addFactory="addFactory"/>
         </div>
     </div>

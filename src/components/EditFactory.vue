@@ -1,7 +1,7 @@
 <template>
 <div class="container">
     <div class="row align-items-center justify-content-center mt-5">
-        <div class="col-5">
+        <div class="col-md-5">
             <factory-form :is-edit="true" :factoryId="factoryId" @editFactory="editFactory" @deleteFactory="deleteFactory"/>
         </div>
     </div>
